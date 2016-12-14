@@ -1,0 +1,165 @@
+The purpose of this file is to explain our thoughts and ideas about the 
+program's structure.
+
+We have a data file called Relationship_name. This is way the actual records
+are stored. 
+
+Our tree will store the non-leaf nodes in the blob file. In other words, blob file pages are nodes and we should cast them as such in the program.
+
+We store leaf nodes as pageFiles. We should cast these as such as well.
+
+These are all stored in the file pointer.
+
+Setting the meta page:
+    Create metapage struct.
+    
+    allocate page in bufMgr.
+    
+    Set allocated page to be casted metapage struct
+   
+    unpin and set dirty to be true
+  
+    Note: When program stops executing, flush file to disk.
+
+Setting the root:
+    Our initial root, is a bit of cheating..
+    Root is just a pointer to the leaf.
+    We store our first full records into that leaf.
+
+    Creating it is similar to setting the metapage.
+ 
+inserting into initial root
+    find out if root is full
+    while not full, find place to insert
+    copy array - don't modify. had some weird record id issue
+    set arrays in leafnode using std::copy
+    done
+
+For the B+ tree insertion layer:
+    I went slowly.
+    Always make a print method - visualization for this layer is key
+    I used a stack to store path from root to leaf - 2 reasons for this
+        -VISUALIZATION - a stack path is easy to print out and visualize
+        -makes recursion step a tiny bit easier
+    Once print and findPath were done
+        I modularized code - full path, splits, etc.
+    But that's a bit too far ahead.
+    The first thing to do is to insert until initial root is full
+    test visual
+    second is to split then test visual
+    Then insert until a leaf is full
+    test visual
+    split leaf - test visual
+    insert and split until root full
+    test visual
+    split root - test visual
+    insert until nonleaf is full
+    split that and test visual
+    - part I didn't do
+    insert until nonleaf is full and propagate to root
+    test visual
+    Without bugs ~~ 72 hours
+    with bugs ~~ 2 weeks
+
+For scan
+    Just use stack and printTree visuals
+    Takes 1 hour to implement
+
+IO layer
+    Aggressively unpin pages
+    constantly flush pages
+    update metapage and root number consistently
+    Don't really understand it much
+
+splitting leaf nodes and non leaf nodes:
+leaf nodes
+split into 2 leaf nodes - each half full
+if length n + 1 is odd, one has n/2 - 0.5, one has n/2 + 0.5
+
+splitting non-leafnodes
+split into 2 non-leaf nodes
+push 1 entry up and split other entries in half
+So if length + 1 is odd, length/2 in each leaf node and pointers are evenly split
+if length + 1 is even, 1 go up and left has length/2 - 0.5 keys and right has length/2 + 0.5 keys
+likewise, pointers are split.
+
+
+
+Notes about my code
+InsertEntry is terrible
+Split in half should be modularized
+tests were visual tests - no automatic unit tests were used
+They weren't needed because we used a slow Agile test driven development style
+       
+For the constructor, here's the idea. We get the datafilename. We store all pages in that file in the buffer manager using filescan. Then use filescan to get actual records and insert those into the tree.
+
+Note about filescan: getting recordIds also stores pages into bufMGr
+If use new, remember to delete filescan - otherwise, relation file stays open
+
+Programming tricks
+==================
+Always draw out your code. It's good practice.
+
+Code small. Create private methods.
+Test those methods.
+This is "code iteration." It saves time in the long run. 
+
+print everything out. 
+Good programming habit.
+
+Learn to use GDB - generally a good idea.
+
+Git stuff
+===================
+git model to use for work (professional career)
+User submits a user request -> create a new branch for it -> complete and test feature on that branch -> merge to develop -> test and make sure develop is stable -> delete feature branch -> merge develop to master -> repeat
+
+creating new branch
+git branch <branchname>
+git checkout <branchname>
+git push --set-upstream origin <branchname>
+
+Starting a new project
+Create a directory to contain the project.
+Go into the new directory.
+Type git init.
+Write some code.
+Type git add to add the files (see the typical use page).
+Type git commit.
+Go to github and create new repository
+git remote add origin git@github.com:username/new_repo
+git push -u origin master
+
+Pulling from existing repository on local machine
+use git pull origin <branch name>
+
+Start working from existing repository on github
+git clone link
+
+Want to commit code
+git add <all filenames>
+git commit -m "What code/issue was fixed
+
+Specifics"
+
+http://chris.beams.io/posts/git-commit/
+For more details
+
+C++ Stuff
+================
+& = address-of
+foo = &myvar
+foo contains the address of myvar
+
+* = dereference method
+
+Operator overloading
+It's like how you define any other method
+after these you can do equality/comparison of objects
+Look at overriding Comparable <T> in java - if you've taken CS 367
+
+Bugs:
+   IO layer sucks
+   Opening already created file seems to corrupt nodes
+   Running main twice causes errors in scan next and insert
+

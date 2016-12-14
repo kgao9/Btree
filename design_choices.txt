@@ -1,0 +1,42 @@
+Our design choices:
+
+We used an old programming theory called test-driven development. It seems to have made a resurgence when
+Unit Tests became a thing haha.. Anyway, our way is a bit old because it uses code iteration at such a slow rate
+but the code becomes stronger as time passes. This is because as our tests become stronger, it reigns the code
+in to match our ideas.
+
+Of course, our code is only as strong as our ideas and how we think the B+ tree works. Because of this choice,
+we created the software_gathering.txt file. This illustrates our thoughts on the B+ tree, how it's supposed
+to be implemented and how leaves/non-leaf-nodes are split. So if our thoughts are correct, the B+
+tree code that we wrote should be very solid. If our thoughts are wrong, the B+ tree we created is shit.
+
+Pardon my language -_-. Our tests are our print methods. Each print method has been tested and has been approved to
+be easy on the eyes; this is so our code can be easily debugged. The average time it took for debug was roughly 20-30 minutes
+and there were a total of around 50 bugs - and a lot more which were not found. The ones that were not found were IO bugs
+simply because we do not understand the IO layer at all. Flush file, write file - it took 3 days to realize file was
+actually a file in the directory and we weren't writing a "fake" file like classes normally do.
+In 354, had to implement a fake cache (took a day with TDD). 
+
+Stylistically visualization was key because once we saw our code was doing the right thing, we could say insertion
+was doing exactly what we wanted it to do and so intuitively it is as strong as our intuition.
+
+Ok, now for the parts of the code that we hate and that will make you scream in frustration :D.
+first insertEntry. Far too much code. Splitting arrays should be a subroutine - it really should.
+There should be a printArray method for visualization, which would stick with our TDD principles.
+Alas after 1 week of straight coding through Thxgiving break, we simply don't want to do it anymore.
+And so we'll say it was one moment of insanity to just write out case after case in insert entry that we
+know work and have a general case once the tree became more complex.
+
+If we modularized, 1800 lines would probably be 1300 lines... Anyway, other parts we hate. The IO layer. The IO layer
+which we implemented sucks - we'll just say it outright. Flushing to file, writing to file, reading from a file
+ - managing memory... It's not very well done. To be honest, there really should be a control center for it, but
+the way we used bufMgr was extremely inefficient and sloppy. Call it harsh, but it's true. Frankly,
+the B+ tree was implemented 85% to perfection but the IO layer is like 10% perfect......
+
+Ok last design choice. We used a stack to store data from the root node to the leaf node.
+This is so when we scan, when we insert, we can easily see the path that each recursive call will take.
+In fact, it's very easy to print out the stack - plus it makes the recursion slightly easier as we can just 
+use the stack as a pointer upwards and use the stack as a base case if needed - it wasn't needed -_-.
+
+We hope you enjoyed this little introspection into our software development cycle and we hope
+the way we laid this out was entertaining, and perhaps it made you laugh just a smidge - or smile at the least. 
