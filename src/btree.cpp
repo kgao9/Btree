@@ -109,7 +109,7 @@ IndexMetaInfo *BTreeIndex::getMetaPage(BufMgr *bufMgrIn, bool fileExists, const 
             {
                 std::string reason = "relation name in metaFile doesn't ";
                 reason += "match relation name passed into constructor";
-                throw new BadIndexInfoException(reason);
+                throw BadIndexInfoException(reason);
             }
 
             else if(sRestraint)
@@ -117,14 +117,14 @@ IndexMetaInfo *BTreeIndex::getMetaPage(BufMgr *bufMgrIn, bool fileExists, const 
                 std::string reason = "attr byte offset in metaFile";
                 reason +=  "doesn't match attr byte offset passed into constructor";
 
-                throw new BadIndexInfoException(reason);
+                throw BadIndexInfoException(reason);
             }
 
             else
             {
                 std::string reason = "attr type in metaFile doesn't match";
                 reason += " attr type passed into constructor";
-                throw new BadIndexInfoException(reason);
+                throw BadIndexInfoException(reason);
 
             }
         }
@@ -1749,12 +1749,12 @@ const void BTreeIndex::startScan(const void* lowValParm,
 {
     if( lowOpParm != GT && lowOp != GTE)
     {
-        throw new BadOpcodesException();
+        throw BadOpcodesException();
     }
 
     if(highOpParm != LT && highOpParm != LTE)
     {
-        throw new BadOpcodesException();
+        throw BadOpcodesException();
     }
 
     //too late for this BS
@@ -1764,7 +1764,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 
     if(*highVal < *lowVal)
     {
-        throw new BadScanrangeException();
+        throw BadScanrangeException();
     }
 
     lowValInt = *lowVal;
@@ -1799,7 +1799,7 @@ const void BTreeIndex::scanNext(RecordId& outRid)
     if(nextEntry == -1)
     {
         std::cout << "threw\n";
-        throw new IndexScanCompletedException();
+        throw IndexScanCompletedException();
     }
 
     LeafNodeInt *leafNode = (LeafNodeInt*)(currentPageData);
@@ -1817,7 +1817,7 @@ const void BTreeIndex::endScan()
 {
     if(!scanExecuting)
     {
-        throw new ScanNotInitializedException();
+        throw ScanNotInitializedException();
     }
 
     else
