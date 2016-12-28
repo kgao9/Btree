@@ -223,10 +223,11 @@ void BTreeIndex::scanDataFile(const std::string & relationName)
 
                 //bufMgr -> readPage(file, rootPageNum, root);
 
-                //rootNode = (NonLeafNodeInt*)(root);
+                //rootNode = (NonLeafNodeInt*)(root);FileScan
 
                 //printTree(rootNode);
                 //exit(0);
+	        delete myFileScan;
     }
 
 }
@@ -364,7 +365,7 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 
 BTreeIndex::~BTreeIndex()
 {
-    
+    delete myFile;   
 }
 
 // -----------------------------------------------------------------------------
