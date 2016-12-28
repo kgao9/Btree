@@ -1747,7 +1747,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 				   const void* highValParm,
 				   const Operator highOpParm)
 {
-    if( lowOpParm != GT && lowOp != GTE)
+    if( lowOpParm != GT && lowOpParm != GTE)
     {
         throw BadOpcodesException();
     }
